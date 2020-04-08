@@ -16,7 +16,7 @@ class VAddy {
     this.http = new httpm.HttpClient('actions-vaddy')
   }
 
-  async start_scan() {
+  async startScan() {
     let url = new URL(api_version_v1 + '/scan', endpoint)
     let data = {
       'action': 'start',
@@ -30,8 +30,7 @@ class VAddy {
     }
     const postData = querystring.stringify(data)
     let res = await this.http.post(url.toString(), postData, {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(postData)
+      'Content-Type': 'application/x-www-form-urlencoded'
     })
     let body = await res.readBody()
     let obj = JSON.parse(body)
@@ -41,7 +40,7 @@ class VAddy {
     return obj.scan_id
   }
 
-  async get_scan_result(scanId) {
+  async getScanResult(scanId) {
     let url = new URL(api_version_v1 + '/scan/result', endpoint)
     url.searchParams.set('user', this.user)
     url.searchParams.set('auth_key', this.authKey)

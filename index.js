@@ -57,13 +57,13 @@ async function run() {
       core.info('crawl_id: ' + crawlId)
     }
     let vaddy = new VAddy(user, authKey, fqdn, verificationCode, crawlId)
-    const scanId = await vaddy.start_scan()
+    const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
-    let result = await vaddy.get_scan_result(scanId)
+    let result = await vaddy.getScanResult(scanId)
     let status = result.status
     while (status === 'scanning') {
       await sleep(5)
-      result = await vaddy.get_scan_result(scanId)
+      result = await vaddy.getScanResult(scanId)
       status = result.status
     }
     if (status === 'finish') {
