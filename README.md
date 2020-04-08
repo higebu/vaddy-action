@@ -4,6 +4,7 @@ GitHub Action to run vulnerability scan with [VAddy](https://vaddy.net/).
 
 [![test](https://github.com/higebu/actions-vaddy/workflows/test/badge.svg)](https://github.com/higebu/actions-vaddy/actions)
 [![codecov](https://codecov.io/gh/higebu/actions-vaddy/branch/master/graph/badge.svg)](https://codecov.io/gh/higebu/actions-vaddy)
+[![CodeFactor](https://www.codefactor.io/repository/github/higebu/actions-vaddy/badge)](https://www.codefactor.io/repository/github/higebu/actions-vaddy)
 
 # Requirements
 
