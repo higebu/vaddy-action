@@ -50,7 +50,7 @@ async function run() {
       'portforward@pfd.vaddy.net',
     ])
     sp.on('error', (err) => {
-     console.error(err)
+      core.setFailed(err)
     })
 
     if (crawlId) {
@@ -60,20 +60,18 @@ async function run() {
     const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
     let result = await vaddy.getScanResult(scanId)
-    let status = result.status
-    while (status === 'scanning') {
+    while (result.status === 'scanning') {
       await sleep(5)
       result = await vaddy.getScanResult(scanId)
-      status = result.status
     }
-    if (status === 'finish') {
+    if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
       if (result.alert_count > 0) {
         core.setFailed('alert_count: ' + result.alert_count)
       }
     } else {
-      core.setFailed(status)
+      core.setFailed(result.status)
     }
     sp.kill()
   }
