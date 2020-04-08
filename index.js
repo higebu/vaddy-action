@@ -22,6 +22,7 @@ async function run() {
     const remotePort = core.getInput('remote_port')
     const localIP = core.getInput('local_ip')
     const localPort = core.getInput('local_port')
+    const crawlId = core.getInput('crawl_id')
     core.setSecret('user')
     core.setSecret('auth_key')
     core.setSecret('fqdn')
@@ -52,7 +53,10 @@ async function run() {
      console.error(err)
     })
 
-    let vaddy = new VAddy(user, authKey, fqdn, verificationCode)
+    if (crawlId) {
+      core.info('crawl_id: ' + crawlId)
+    }
+    let vaddy = new VAddy(user, authKey, fqdn, verificationCode, crawlId)
     const scanId = await vaddy.start_scan()
     core.info('scan_id: ' + scanId)
     let result = await vaddy.get_scan_result(scanId)

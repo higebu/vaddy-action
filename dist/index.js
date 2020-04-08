@@ -381,6 +381,7 @@ async function run() {
     const remotePort = core.getInput('remote_port')
     const localIP = core.getInput('local_ip')
     const localPort = core.getInput('local_port')
+    const crawlId = core.getInput('crawl_id')
     core.setSecret('user')
     core.setSecret('auth_key')
     core.setSecret('fqdn')
@@ -411,7 +412,10 @@ async function run() {
      console.error(err)
     })
 
-    let vaddy = new VAddy(user, authKey, fqdn, verificationCode)
+    if (crawlId) {
+      core.info('crawl_id: ' + crawlId)
+    }
+    let vaddy = new VAddy(user, authKey, fqdn, verificationCode, crawlId)
     const scanId = await vaddy.start_scan()
     core.info('scan_id: ' + scanId)
     let result = await vaddy.get_scan_result(scanId)
@@ -452,11 +456,14 @@ const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
 
 class VAddy {
-  constructor(user, authKey, fqdn, verificationCode) {
+  constructor(user, authKey, fqdn, verificationCode, crawlId) {
     this.user = user
     this.authKey = authKey
     this.fqdn = fqdn
     this.verificationCode = verificationCode
+    if (crawlId) {
+      this.crawlId = crawlId
+    }
     this.http = new httpm.HttpClient('actions-vaddy')
   }
 
@@ -468,6 +475,9 @@ class VAddy {
       'auth_key': this.authKey,
       'fqdn': this.fqdn,
       'verification_code': this.verificationCode,
+    }
+    if (this.crawlId) {
+      data['crawl_id'] = this.crawlId
     }
     const postData = querystring.stringify(data)
     let res = await this.http.post(url.toString(), postData, {

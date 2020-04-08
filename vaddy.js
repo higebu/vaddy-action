@@ -5,11 +5,14 @@ const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
 
 class VAddy {
-  constructor(user, authKey, fqdn, verificationCode) {
+  constructor(user, authKey, fqdn, verificationCode, crawlId) {
     this.user = user
     this.authKey = authKey
     this.fqdn = fqdn
     this.verificationCode = verificationCode
+    if (crawlId) {
+      this.crawlId = crawlId
+    }
     this.http = new httpm.HttpClient('actions-vaddy')
   }
 
@@ -21,6 +24,9 @@ class VAddy {
       'auth_key': this.authKey,
       'fqdn': this.fqdn,
       'verification_code': this.verificationCode,
+    }
+    if (this.crawlId) {
+      data['crawl_id'] = this.crawlId
     }
     const postData = querystring.stringify(data)
     let res = await this.http.post(url.toString(), postData, {
