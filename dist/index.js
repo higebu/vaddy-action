@@ -416,13 +416,13 @@ async function run() {
       core.info('crawl_id: ' + crawlId)
     }
     let vaddy = new VAddy(user, authKey, fqdn, verificationCode, crawlId)
-    const scanId = await vaddy.start_scan()
+    const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
-    let result = await vaddy.get_scan_result(scanId)
+    let result = await vaddy.getScanResult(scanId)
     let status = result.status
     while (status === 'scanning') {
       await sleep(5)
-      result = await vaddy.get_scan_result(scanId)
+      result = await vaddy.getScanResult(scanId)
       status = result.status
     }
     if (status === 'finish') {
@@ -467,7 +467,7 @@ class VAddy {
     this.http = new httpm.HttpClient('actions-vaddy')
   }
 
-  async start_scan() {
+  async startScan() {
     let url = new URL(api_version_v1 + '/scan', endpoint)
     let data = {
       'action': 'start',
@@ -481,8 +481,7 @@ class VAddy {
     }
     const postData = querystring.stringify(data)
     let res = await this.http.post(url.toString(), postData, {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(postData)
+      'Content-Type': 'application/x-www-form-urlencoded'
     })
     let body = await res.readBody()
     let obj = JSON.parse(body)
@@ -492,7 +491,7 @@ class VAddy {
     return obj.scan_id
   }
 
-  async get_scan_result(scanId) {
+  async getScanResult(scanId) {
     let url = new URL(api_version_v1 + '/scan/result', endpoint)
     url.searchParams.set('user', this.user)
     url.searchParams.set('auth_key', this.authKey)
