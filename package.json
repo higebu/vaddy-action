@@ -1,0 +1,39 @@
+{
+  "name": "actions-vaddy",
+  "version": "1.0.0",
+  "description": "GitHub Action to run security scan with VAddy",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js vaddy.js",
+    "package": "ncc build index.js -o dist",
+    "test": "eslint index.js vaddy.js && jest",
+    "integration": "jest -c jest.config.integration.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/higebu/actions-vaddy.git"
+  },
+  "keywords": [
+    "VAddy",
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "Yuya Kusakabe <yuya.kusakabe@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/higebu/actions-vaddy/issues"
+  },
+  "homepage": "https://github.com/higebu/actions-vaddy#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/exec": "^1.0.3",
+    "@actions/http-client": "^1.0.7",
+    "@actions/io": "^1.0.2"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "0.20.5",
+    "eslint": "6.8.0",
+    "jest": "24.9.0"
+  }
+}

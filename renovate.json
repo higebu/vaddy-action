@@ -1,0 +1,24 @@
+{
+  "extends": [
+    ":separateMajorReleases",
+    ":combinePatchMinorReleases",
+    ":ignoreUnstable",
+    ":prImmediately",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":updateNotScheduled",
+    ":automergeMinor",
+    ":automergeDigest",
+    ":ignoreModulesAndTests",
+    ":maintainLockFilesDisabled",
+    ":autodetectPinVersions",
+    ":prHourlyLimitNone",
+    "group:monorepos",
+    "group:recommended",
+    ":timezone(Asia/Tokyo)",
+    "schedule:nonOfficeHours",
+    ":label(renovate)",
+    "helpers:disableTypesNodeMajor"
+  ],
+  "prConcurrentLimit": 1,
+  "bumpVersion": "patch"
+}

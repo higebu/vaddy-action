@@ -1,0 +1,33 @@
+name: 'VAddy Security Scan'
+description: "GitHub Action to run security scan with VAddy"
+inputs:
+  user:
+    description: 'Login UserID'
+    required: true
+  auth_key:
+    description: 'VAddy WebAPI Key'
+    required: true
+  fqdn:
+    description: 'Server FQDN'
+    required: true
+  verification_code:
+    description: 'Verification code of your FQDN'
+    required: true
+  private_key:
+    description: 'Private key for SSH tunnel'
+    required: true
+  remote_port:
+    description: 'Remote port for SSH tunnel'
+    required: true
+  local_ip:
+    description: 'Your local Web Server IP address'
+    required: true
+  local_port:
+    description: 'Your local Web Server Port Number'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: eye
+  color: green
