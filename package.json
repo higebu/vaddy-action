@@ -1,7 +1,7 @@
 {
   "name": "actions-vaddy",
   "version": "1.0.0",
-  "description": "GitHub Action to run security scan with VAddy",
+  "description": "GitHub Action to run vulnerability scan with VAddy",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js vaddy.js",

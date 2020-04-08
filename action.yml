@@ -1,5 +1,5 @@
-name: 'VAddy Security Scan'
-description: "GitHub Action to run security scan with VAddy"
+name: 'VAddy Vulnerability Scan'
+description: "GitHub Action to run vulnerability scan with VAddy"
 inputs:
   user:
     description: 'Login UserID'
