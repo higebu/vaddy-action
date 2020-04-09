@@ -360,12 +360,6 @@ module.exports = require("os");
 const VAddy = __webpack_require__(114)
 const core = __webpack_require__(470)
 
-function sleep(waitSec) {
-    return new Promise(function (resolve) {
-        setTimeout(function() { resolve() }, waitSec);
-    });
-} 
-
 async function run() {
   try { 
     let vaddy = new VAddy()
@@ -377,11 +371,7 @@ async function run() {
     })
     const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
-    let result = await vaddy.getScanResult(scanId)
-    while (result.status === 'scanning') {
-      await sleep(5)
-      result = await vaddy.getScanResult(scanId)
-    }
+    let result = await vaddy.waitScan(scanId)
     if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
@@ -417,6 +407,12 @@ const { spawn } = __webpack_require__(129);
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
+
+function sleep(waitSec) {
+    return new Promise(function (resolve) {
+        setTimeout(function() { resolve() }, waitSec);
+    });
+} 
 
 class VAddy {
   constructor() {
@@ -504,6 +500,15 @@ class VAddy {
       throw new Error(obj.error_message)
     }
     return obj
+  }
+
+  async waitScan(scanId) {
+    let result = await this.getScanResult(scanId)
+    while (result.status === 'scanning') {
+      await sleep(5)
+      result = await this.getScanResult(scanId)
+    }
+    return result
   }
 }
 
