@@ -1,12 +1,6 @@
 const VAddy = require('./vaddy')
 const core = require('@actions/core')
 
-function sleep(waitSec) {
-    return new Promise(function (resolve) {
-        setTimeout(function() { resolve() }, waitSec);
-    });
-} 
-
 async function run() {
   try { 
     let vaddy = new VAddy()
@@ -18,11 +12,7 @@ async function run() {
     })
     const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
-    let result = await vaddy.getScanResult(scanId)
-    while (result.status === 'scanning') {
-      await sleep(5)
-      result = await vaddy.getScanResult(scanId)
-    }
+    let result = await vaddy.waitScan(scanId)
     if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)

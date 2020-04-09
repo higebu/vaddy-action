@@ -10,6 +10,12 @@ const { spawn } = require('child_process');
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
 
+function sleep(waitSec) {
+    return new Promise(function (resolve) {
+        setTimeout(function() { resolve() }, waitSec);
+    });
+} 
+
 class VAddy {
   constructor() {
     this.user = core.getInput('user')
@@ -96,6 +102,15 @@ class VAddy {
       throw new Error(obj.error_message)
     }
     return obj
+  }
+
+  async waitScan(scanId) {
+    let result = await this.getScanResult(scanId)
+    while (result.status === 'scanning') {
+      await sleep(5)
+      result = await this.getScanResult(scanId)
+    }
+    return result
   }
 }
 

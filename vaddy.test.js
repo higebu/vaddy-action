@@ -151,4 +151,30 @@ describe('api tests', () => {
     await expect(vaddy.getScanResult('12345')).rejects.toThrow('error!')
     scope.done()
   })
+
+  test('test waitScan', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v1/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+        scan_id: '12345'
+      })
+      .reply(200, {status: 'scanning'})
+      .get('/v1/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+        scan_id: '12345'
+      })
+      .reply(200, {status: 'finish'})
+    let vaddy = new VAddy()
+    const result = await vaddy.waitScan('12345')
+    expect(result.status).toBe('finish')
+    scope.done()
+  })
 })
