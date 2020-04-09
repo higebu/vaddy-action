@@ -1,6 +1,8 @@
 const VAddy = require('./vaddy')
 const { spawn } = require('child_process')
 const EventEmitter = require('events')
+const os = require('os')
+const path = require('path')
 
 jest.mock('child_process')
 
@@ -42,7 +44,7 @@ describe('ssh tunnel tests', () => {
       '-o',
       'StrictHostKeyChecking=no',
       '-i',
-      '/home/debian/vaddy/ssh/key',
+      path.join(os.homedir(), '/vaddy/ssh/key'),
       '-N',
       '-R',
       '0.0.0.0:9999:local_ip:local_port',

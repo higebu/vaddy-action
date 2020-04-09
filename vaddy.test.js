@@ -1,4 +1,5 @@
 const VAddy = require('./vaddy')
+const io = require('@actions/io')
 const nock = require('nock')
 const os = require('os')
 const path = require('path')
@@ -36,32 +37,47 @@ describe('constructor tests', () => {
 })
 
 describe('ssh key tests', () => {
+  let vaddy = new VAddy()
   let td = ''
+
   beforeEach(() => {
     td = fs.mkdtempSync(path.join(os.tmpdir(), 'actions-vaddy-test-'))
+    vaddy = new VAddy()
+    vaddy.sshdir = path.join(td, 'ssh')
+    vaddy.keypath = path.join(vaddy.sshdir, 'key')
   })
+
   afterEach(() => {
     fs.rmdirSync(td, {recursive: true})
   })
+
   test('test putKey', async() => {
-    let vaddy = new VAddy()
-    vaddy.sshdir = path.join(td, 'ssh')
-    vaddy.keypath = path.join(vaddy.sshdir, 'key')
     await vaddy.putKey()
     expect(fs.existsSync(vaddy.keypath)).toBe(true)
   })
 
   test('test genKey', async() => {
-    let vaddy = new VAddy()
-    vaddy.sshdir = path.join(td, 'ssh')
-    vaddy.keypath = path.join(vaddy.sshdir, 'key')
-    const keypath = await vaddy.genKey()
+    await vaddy.genKey()
     expect(fs.existsSync(vaddy.sshdir)).toBe(true)
     expect(fs.existsSync(vaddy.keypath)).toBe(true)
   })
 })
 
 describe('api tests', () => {
+  let vaddy = new VAddy()
+  let td = ''
+
+  beforeEach(() => {
+    td = fs.mkdtempSync(path.join(os.tmpdir(), 'actions-vaddy-test-'))
+    vaddy = new VAddy()
+    vaddy.sshdir = path.join(td, 'ssh')
+    vaddy.keypath = path.join(vaddy.sshdir, 'key')
+  })
+
+  afterEach(() => {
+    fs.rmdirSync(td, {recursive: true})
+  })
+
   test('test getPort', async() => {
     const scope = nock('https://api.vaddy.net')
       .get('/v1/privnet/port')
@@ -71,7 +87,6 @@ describe('api tests', () => {
         fqdn: 'fqdn',
       })
       .reply(200, {port: '9999'})
-    let vaddy = new VAddy()
     const port = await vaddy.getPort()
     expect(port).toBe('9999')
     expect(vaddy.remotePort).toBe('9999')
@@ -87,7 +102,6 @@ describe('api tests', () => {
         fqdn: 'fqdn',
       })
       .reply(400, {error_message: 'error!'})
-    let vaddy = new VAddy()
     await expect(vaddy.getPort()).rejects.toThrow('error!')
     scope.done()
   })
@@ -96,7 +110,9 @@ describe('api tests', () => {
     const scope = nock('https://api.vaddy.net')
       .post('/v1/privnet/sshkey')
       .reply(200, {status: 'ok'})
-    let vaddy = new VAddy()
+    await io.mkdirP(vaddy.sshdir)
+    fs.writeFileSync(vaddy.keypath+'.pub', 'aaa'+os.EOL, {mode: 0o600, flag: 'a'})
+    console.log(vaddy.keypath)
     await vaddy.postKey()
     scope.done()
   })
@@ -105,7 +121,8 @@ describe('api tests', () => {
     const scope = nock('https://api.vaddy.net')
       .post('/v1/privnet/sshkey')
       .reply(400, {error_message: 'error!'})
-    let vaddy = new VAddy()
+    await io.mkdirP(vaddy.sshdir)
+    fs.writeFileSync(vaddy.keypath+'.pub', 'aaa'+os.EOL, {mode: 0o600, flag: 'a'})
     await expect(vaddy.postKey()).rejects.toThrow('error!')
     scope.done()
   })
@@ -114,18 +131,16 @@ describe('api tests', () => {
     const scope = nock('https://api.vaddy.net')
       .post('/v1/scan')
       .reply(200, {scan_id: '12345'})
-    let vaddy = new VAddy()
     const scanId = await vaddy.startScan()
     expect(scanId).toBe('12345')
     scope.done()
   })
   
   test('test startScan with crawl_id', async() => {
-    process.env.INPUT_CRAWL_ID = 'crawl_id'
+    vaddy.crawlId = 'crawl_id'
     const scope = nock('https://api.vaddy.net')
       .post('/v1/scan')
       .reply(200, {scan_id: '12345'})
-    let vaddy = new VAddy()
     const scanId = await vaddy.startScan()
     expect(scanId).toBe('12345')
     scope.done()
@@ -135,7 +150,6 @@ describe('api tests', () => {
     const scope = nock('https://api.vaddy.net')
       .post('/v1/scan')
       .reply(400, {error_message: 'error!'})
-    let vaddy = new VAddy()
     await expect(vaddy.startScan()).rejects.toThrow('error!')
     scope.done()
   })
@@ -151,7 +165,6 @@ describe('api tests', () => {
         scan_id: '12345'
       })
       .reply(200, {status: 'scanning'})
-    let vaddy = new VAddy()
     const result = await vaddy.getScanResult('12345')
     expect(result.status).toBe('scanning')
     scope.done()
@@ -168,7 +181,6 @@ describe('api tests', () => {
         scan_id: '12345'
       })
       .reply(400, {error_message: 'error!'})
-    let vaddy = new VAddy()
     await expect(vaddy.getScanResult('12345')).rejects.toThrow('error!')
     scope.done()
   })
@@ -193,7 +205,6 @@ describe('api tests', () => {
         scan_id: '12345'
       })
       .reply(200, {status: 'finish'})
-    let vaddy = new VAddy()
     const result = await vaddy.waitScan('12345')
     expect(result.status).toBe('finish')
     scope.done()
