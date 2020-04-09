@@ -1,19 +1,61 @@
+const core = require('@actions/core')
+const io = require('@actions/io')
 const httpm = require('@actions/http-client')
 const querystring = require('querystring');
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+const { spawn } = require('child_process');
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
 
 class VAddy {
-  constructor(user, authKey, fqdn, verificationCode, crawlId) {
-    this.user = user
-    this.authKey = authKey
-    this.fqdn = fqdn
-    this.verificationCode = verificationCode
-    if (crawlId) {
-      this.crawlId = crawlId
-    }
+  constructor() {
+    this.user = core.getInput('user')
+    this.authKey = core.getInput('auth_key')
+    this.fqdn = core.getInput('fqdn')
+    this.verificationCode = core.getInput('verification_code')
+    this.privateKey = core.getInput('private_key')
+    this.remotePort = core.getInput('remote_port')
+    this.localIP = core.getInput('local_ip')
+    this.localPort = core.getInput('local_port')
+    this.crawlId = core.getInput('crawl_id')
     this.http = new httpm.HttpClient('actions-vaddy')
+    this.setSecret()
+    this.sshdir = path.join(os.homedir(), '/vaddy/ssh')
+    this.keypath = path.join(this.sshdir, 'key')
+  }
+
+  setSecret() {
+    core.setSecret('user')
+    core.setSecret('auth_key')
+    core.setSecret('fqdn')
+    core.setSecret('verification_code')
+    core.setSecret('private_key')
+    core.setSecret('remote_port')
+    core.setSecret('local_ip')
+    core.setSecret('local_port')
+  }
+
+  async putKey() {
+    await io.mkdirP(this.sshdir)
+    fs.writeFileSync(this.keypath, this.privateKey+os.EOL, {mode: 0o600, flag: 'ax'})
+  }
+
+  async spawnSsh() {
+    return spawn('ssh', [
+      '-o',
+      'UserKnownHostsFile=/dev/null',
+      '-o',
+      'StrictHostKeyChecking=no',
+      '-i',
+      this.keypath,
+      '-N',
+      '-R',
+      '0.0.0.0:'+this.remotePort+':'+this.localIP+':'+this.localPort,
+      'portforward@pfd.vaddy.net',
+    ])
   }
 
   async startScan() {
