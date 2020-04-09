@@ -209,4 +209,71 @@ describe('api tests', () => {
     expect(result.status).toBe('finish')
     scope.done()
   })
+
+  test('test runCheck', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v1/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+      })
+      .reply(200, {running_process: 0})
+    const rp = await vaddy.runCheck()
+    expect(rp).toBe(0)
+    scope.done()
+  })
+  
+  test('test runCheck failed', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v1/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+      })
+      .reply(400, {error_message: 'error!'})
+    await expect(vaddy.runCheck()).rejects.toThrow('error!')
+    scope.done()
+  })
+
+  test('test waitRunningProcess 0', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v1/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+      })
+      .reply(200, {running_process: 0})
+    const rp = await vaddy.waitRunningProcess(1)
+    expect(rp).toBe(0)
+    scope.done()
+  })
+
+  test('test waitRunningProcess 1', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v1/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+      })
+      .reply(200, {running_process: 1})
+      .get('/v1/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        fqdn: 'fqdn',
+        verification_code: 'verification_code',
+      })
+      .reply(200, {running_process: 1})
+    const rp = await vaddy.waitRunningProcess(1)
+    expect(rp).toBe(1)
+    scope.done()
+  })
 })

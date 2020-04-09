@@ -5,6 +5,10 @@ async function run() {
   try { 
     let vaddy = new VAddy()
     vaddy.setSecret()
+    const rp = await vaddy.waitRunningProcess(10)
+    if (rp > 0) {
+      throw new Error('running_process: ' + rp)
+    }
     if (vaddy.privateKey) {
       core.info('use private_key from input')
       await vaddy.putKey()
@@ -26,10 +30,12 @@ async function run() {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
       if (result.alert_count > 0) {
-        core.setFailed('alert_count: ' + result.alert_count)
+        sp.kill()
+        throw new Error('alert_count: ' + result.alert_count)
       }
     } else {
-      core.setFailed(result.status)
+      sp.kill()
+      throw new Error('status: ' + result.status)
     }
     sp.kill()
   }
