@@ -363,7 +363,16 @@ const core = __webpack_require__(470)
 async function run() {
   try { 
     let vaddy = new VAddy()
-    await vaddy.putKey()
+    vaddy.setSecret()
+    if (vaddy.privateKey) {
+      core.info('use private_key from input')
+      await vaddy.putKey()
+    } else {
+      core.info('generate private_key')
+      await vaddy.genKey()
+      await vaddy.postKey()
+    }
+    await vaddy.getPort()
     const sp = await vaddy.spawnSsh()
     sp.on('error', (err) => {
       sp.kill()
@@ -403,7 +412,7 @@ const querystring = __webpack_require__(191);
 const fs = __webpack_require__(747)
 const os = __webpack_require__(87)
 const path = __webpack_require__(622)
-const { spawn } = __webpack_require__(129);
+const { spawn, execSync } = __webpack_require__(129);
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
@@ -421,14 +430,12 @@ class VAddy {
     this.fqdn = core.getInput('fqdn')
     this.verificationCode = core.getInput('verification_code')
     this.privateKey = core.getInput('private_key')
-    this.remotePort = core.getInput('remote_port')
     this.localIP = core.getInput('local_ip')
     this.localPort = core.getInput('local_port')
     this.crawlId = core.getInput('crawl_id')
-    this.http = new httpm.HttpClient('actions-vaddy')
-    this.setSecret()
     this.sshdir = path.join(os.homedir(), '/vaddy/ssh')
     this.keypath = path.join(this.sshdir, 'key')
+    this.http = new httpm.HttpClient('actions-vaddy')
   }
 
   setSecret() {
@@ -447,6 +454,46 @@ class VAddy {
     fs.writeFileSync(this.keypath, this.privateKey+os.EOL, {mode: 0o600, flag: 'ax'})
   }
 
+  async genKey() {
+    await io.mkdirP(this.sshdir)
+    execSync('ssh-keygen -t rsa -q -f ' + this.keypath + ' -N ""')
+  }
+
+  async postKey() {
+    const key = fs.readFileSync(this.keypath+'.pub')
+    let url = new URL(api_version_v1 + '/privnet/sshkey', endpoint)
+    let data = {
+      'user': this.user,
+      'auth_key': this.authKey,
+      'fqdn': this.fqdn,
+      'sshkey': key.toString(),
+    }
+    const postData = querystring.stringify(data)
+    let res = await this.http.post(url.toString(), postData, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    })
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+  }
+
+  async getPort() {
+    let url = new URL(api_version_v1 + '/privnet/port', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('fqdn', this.fqdn)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    this.remotePort = obj.port
+    return obj.port
+  }
+
   async spawnSsh() {
     return spawn('ssh', [
       '-o',
@@ -454,7 +501,7 @@ class VAddy {
       '-o',
       'StrictHostKeyChecking=no',
       '-i',
-      this.keypath,
+      path.join(this.sshdir, 'key'),
       '-N',
       '-R',
       '0.0.0.0:'+this.remotePort+':'+this.localIP+':'+this.localPort,
