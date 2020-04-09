@@ -364,6 +364,10 @@ async function run() {
   try { 
     let vaddy = new VAddy()
     vaddy.setSecret()
+    const rp = await vaddy.waitRunningProcess(10)
+    if (rp > 0) {
+      throw new Error('running_process: ' + rp)
+    }
     if (vaddy.privateKey) {
       core.info('use private_key from input')
       await vaddy.putKey()
@@ -385,10 +389,12 @@ async function run() {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
       if (result.alert_count > 0) {
-        core.setFailed('alert_count: ' + result.alert_count)
+        sp.kill()
+        throw new Error('alert_count: ' + result.alert_count)
       }
     } else {
-      core.setFailed(result.status)
+      sp.kill()
+      throw new Error('status: ' + result.status)
     }
     sp.kill()
   }
@@ -507,6 +513,34 @@ class VAddy {
       '0.0.0.0:'+this.remotePort+':'+this.localIP+':'+this.localPort,
       'portforward@pfd.vaddy.net',
     ])
+  }
+
+  async runCheck() {
+    let url = new URL(api_version_v1 + '/scan/runcheck', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('fqdn', this.fqdn)
+    url.searchParams.set('verification_code', this.verificationCode)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj.running_process
+  }
+
+  async waitRunningProcess(timeout) {
+    let rp = await this.runCheck()
+    for (var i = 0; i < timeout; i++) {
+      if (rp === 0) {
+        return rp
+      }
+      core.info('wait for running process: ' + rp)
+      await sleep(1)
+      rp = await this.runCheck()
+    }
+    return rp
   }
 
   async startScan() {
