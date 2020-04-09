@@ -23,12 +23,10 @@ Add the following secrets to your project.
     * Server FQDN
 * `VADDY_VERIFICATION_CODE`
     * Verification code of your FQDN
-* `VADDY_PRIVATE_KEY`
+* `VADDY_PRIVATE_KEY` (Optional)
     * Private key for SSH tunnel
     * You can get the key from `privatenet/vaddy/ssh/id_rsa` in [go-vaddy](https://github.com/vaddy/go-vaddy). After running `vaddy_privatenet.sh connect`
-* `VADDY_REMOTE_PORT`
-    * Remote port for SSH tunnel
-    * You can get the port number when running `vaddy_privatenet.sh connect`
+    * If you don't set `VADDY_PRIVATE_KEY`, actions-vaddy generates SSH key every time.
 * `VADDY_YOUR_LOCAL_IP`
     * Your local Web Server IP address
     * ex. `127.0.0.1`
@@ -59,7 +57,6 @@ jobs:
         fqdn: ${{ secrets.VADDY_FQDN }}
         verification_code: ${{ secrets.VADDY_VERIFICATION_CODE }}
         private_key: ${{ secrets.VADDY_PRIVATE_KEY }}
-        remote_port: ${{ secrets.VADDY_REMOTE_PORT }}
         local_ip: ${{ secrets.VADDY_YOUR_LOCAL_IP }}
         local_port: ${{ secrets.VADDY_YOUR_LOCAL_PORT }}
         # crawl_id: 12345

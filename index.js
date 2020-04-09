@@ -4,7 +4,16 @@ const core = require('@actions/core')
 async function run() {
   try { 
     let vaddy = new VAddy()
-    await vaddy.putKey()
+    vaddy.setSecret()
+    if (vaddy.privateKey) {
+      core.info('use private_key from input')
+      await vaddy.putKey()
+    } else {
+      core.info('generate private_key')
+      await vaddy.genKey()
+      await vaddy.postKey()
+    }
+    await vaddy.getPort()
     const sp = await vaddy.spawnSsh()
     sp.on('error', (err) => {
       sp.kill()

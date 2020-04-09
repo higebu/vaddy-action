@@ -17,7 +17,17 @@ test('test run', async() => {
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
   process.env.INPUT_VERIFICATION_CODE = process.env.VADDY_VERIFICATION_CODE
   process.env.INPUT_PRIVATE_KEY = process.env.VADDY_PRIVATE_KEY
-  process.env.INPUT_REMOTE_PORT = process.env.VADDY_REMOTE_PORT
+  process.env.INPUT_LOCAL_IP = process.env.VADDY_YOUR_LOCAL_IP
+  process.env.INPUT_LOCAL_PORT = process.env.VADDY_YOUR_LOCAL_PORT
+  const ip = path.join(__dirname, 'index.js');
+  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
+});
+
+test('test run with private_key', async() => {
+  process.env.INPUT_USER = process.env.VADDY_USER
+  process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
+  process.env.INPUT_FQDN = process.env.VADDY_FQDN
+  process.env.INPUT_VERIFICATION_CODE = process.env.VADDY_VERIFICATION_CODE
   process.env.INPUT_LOCAL_IP = process.env.VADDY_YOUR_LOCAL_IP
   process.env.INPUT_LOCAL_PORT = process.env.VADDY_YOUR_LOCAL_PORT
   const ip = path.join(__dirname, 'index.js');
@@ -29,8 +39,19 @@ test('test run with crawl_id', async() => {
   process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
   process.env.INPUT_VERIFICATION_CODE = process.env.VADDY_VERIFICATION_CODE
+  process.env.INPUT_LOCAL_IP = process.env.VADDY_YOUR_LOCAL_IP
+  process.env.INPUT_LOCAL_PORT = process.env.VADDY_YOUR_LOCAL_PORT
+  process.env.INPUT_CRAWL_ID = process.env.VADDY_CRAWL_ID
+  const ip = path.join(__dirname, 'index.js');
+  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
+});
+
+test('test run with private_key and crawl_id', async() => {
+  process.env.INPUT_USER = process.env.VADDY_USER
+  process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
+  process.env.INPUT_FQDN = process.env.VADDY_FQDN
+  process.env.INPUT_VERIFICATION_CODE = process.env.VADDY_VERIFICATION_CODE
   process.env.INPUT_PRIVATE_KEY = process.env.VADDY_PRIVATE_KEY
-  process.env.INPUT_REMOTE_PORT = process.env.VADDY_REMOTE_PORT
   process.env.INPUT_LOCAL_IP = process.env.VADDY_YOUR_LOCAL_IP
   process.env.INPUT_LOCAL_PORT = process.env.VADDY_YOUR_LOCAL_PORT
   process.env.INPUT_CRAWL_ID = process.env.VADDY_CRAWL_ID
