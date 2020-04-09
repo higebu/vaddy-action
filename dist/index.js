@@ -359,11 +359,6 @@ module.exports = require("os");
 
 const VAddy = __webpack_require__(114)
 const core = __webpack_require__(470)
-const io = __webpack_require__(1)
-const fs = __webpack_require__(747)
-const os = __webpack_require__(87)
-const path = __webpack_require__(622)
-const { spawn } = __webpack_require__(129);
 
 function sleep(waitSec) {
     return new Promise(function (resolve) {
@@ -373,49 +368,13 @@ function sleep(waitSec) {
 
 async function run() {
   try { 
-    const user = core.getInput('user')
-    const authKey = core.getInput('auth_key')
-    const fqdn = core.getInput('fqdn')
-    const verificationCode = core.getInput('verification_code')
-    const privateKey = core.getInput('private_key')
-    const remotePort = core.getInput('remote_port')
-    const localIP = core.getInput('local_ip')
-    const localPort = core.getInput('local_port')
-    const crawlId = core.getInput('crawl_id')
-    core.setSecret('user')
-    core.setSecret('auth_key')
-    core.setSecret('fqdn')
-    core.setSecret('verification_code')
-    core.setSecret('private_key')
-    core.setSecret('remote_port')
-    core.setSecret('local_ip')
-    core.setSecret('local_port')
-
-    const homedir = os.homedir()
-    const sshdir = path.join(homedir, '/vaddy/ssh')
-    const keypath = path.join(sshdir, 'key')
-    await io.mkdirP(sshdir)
-    fs.writeFileSync(keypath, privateKey+os.EOL, {mode: 0o600, flag: 'ax'})
-    const sp = spawn('ssh', [
-      '-o',
-      'UserKnownHostsFile=/dev/null',
-      '-o',
-      'StrictHostKeyChecking=no',
-      '-i',
-      keypath,
-      '-N',
-      '-R',
-      '0.0.0.0:'+remotePort+':'+localIP+':'+localPort,
-      'portforward@pfd.vaddy.net',
-    ])
+    let vaddy = new VAddy()
+    await vaddy.putKey()
+    const sp = await vaddy.spawnSsh()
     sp.on('error', (err) => {
-      core.setFailed(err)
+      sp.kill()
+      throw new Error(err)
     })
-
-    if (crawlId) {
-      core.info('crawl_id: ' + crawlId)
-    }
-    let vaddy = new VAddy(user, authKey, fqdn, verificationCode, crawlId)
     const scanId = await vaddy.startScan()
     core.info('scan_id: ' + scanId)
     let result = await vaddy.getScanResult(scanId)
@@ -447,22 +406,64 @@ run()
 /***/ 114:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
+const core = __webpack_require__(470)
+const io = __webpack_require__(1)
 const httpm = __webpack_require__(539)
 const querystring = __webpack_require__(191);
+const fs = __webpack_require__(747)
+const os = __webpack_require__(87)
+const path = __webpack_require__(622)
+const { spawn } = __webpack_require__(129);
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
 
 class VAddy {
-  constructor(user, authKey, fqdn, verificationCode, crawlId) {
-    this.user = user
-    this.authKey = authKey
-    this.fqdn = fqdn
-    this.verificationCode = verificationCode
-    if (crawlId) {
-      this.crawlId = crawlId
-    }
+  constructor() {
+    this.user = core.getInput('user')
+    this.authKey = core.getInput('auth_key')
+    this.fqdn = core.getInput('fqdn')
+    this.verificationCode = core.getInput('verification_code')
+    this.privateKey = core.getInput('private_key')
+    this.remotePort = core.getInput('remote_port')
+    this.localIP = core.getInput('local_ip')
+    this.localPort = core.getInput('local_port')
+    this.crawlId = core.getInput('crawl_id')
     this.http = new httpm.HttpClient('actions-vaddy')
+    this.setSecret()
+    this.sshdir = path.join(os.homedir(), '/vaddy/ssh')
+    this.keypath = path.join(this.sshdir, 'key')
+  }
+
+  setSecret() {
+    core.setSecret('user')
+    core.setSecret('auth_key')
+    core.setSecret('fqdn')
+    core.setSecret('verification_code')
+    core.setSecret('private_key')
+    core.setSecret('remote_port')
+    core.setSecret('local_ip')
+    core.setSecret('local_port')
+  }
+
+  async putKey() {
+    await io.mkdirP(this.sshdir)
+    fs.writeFileSync(this.keypath, this.privateKey+os.EOL, {mode: 0o600, flag: 'ax'})
+  }
+
+  async spawnSsh() {
+    return spawn('ssh', [
+      '-o',
+      'UserKnownHostsFile=/dev/null',
+      '-o',
+      'StrictHostKeyChecking=no',
+      '-i',
+      this.keypath,
+      '-N',
+      '-R',
+      '0.0.0.0:'+this.remotePort+':'+this.localIP+':'+this.localPort,
+      'portforward@pfd.vaddy.net',
+    ])
   }
 
   async startScan() {
