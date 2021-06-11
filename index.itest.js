@@ -12,6 +12,10 @@ beforeEach(() => {
 })
 
 test('test run', async() => {
+  if (!(process.env.VADDY_FQDN)) {
+    console.log('VADDY_FQDN is empty')
+    return
+  }
   process.env.INPUT_USER = process.env.VADDY_USER
   process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
@@ -24,6 +28,10 @@ test('test run', async() => {
 });
 
 test('test run with private_key', async() => {
+  if (!(process.env.VADDY_FQDN)) {
+    console.log('VADDY_FQDN is empty')
+    return
+  }
   process.env.INPUT_USER = process.env.VADDY_USER
   process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
@@ -35,6 +43,10 @@ test('test run with private_key', async() => {
 });
 
 test('test run with crawl_id', async() => {
+  if (!(process.env.VADDY_FQDN)) {
+    console.log('VADDY_FQDN is empty')
+    return
+  }
   process.env.INPUT_USER = process.env.VADDY_USER
   process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
@@ -47,6 +59,10 @@ test('test run with crawl_id', async() => {
 });
 
 test('test run with private_key and crawl_id', async() => {
+  if (!(process.env.VADDY_FQDN)) {
+    console.log('VADDY_FQDN is empty')
+    return
+  }
   process.env.INPUT_USER = process.env.VADDY_USER
   process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
   process.env.INPUT_FQDN = process.env.VADDY_FQDN
@@ -58,3 +74,30 @@ test('test run with private_key and crawl_id', async() => {
   const ip = path.join(__dirname, 'index.js');
   console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
 });
+
+test('test run V2', async() => {
+  if (!(process.env.VADDY_PROJECT_ID)) {
+    console.log('VADDY_PROJECT_ID is empty')
+    return
+  }
+  process.env.INPUT_USER = process.env.VADDY_USER
+  process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
+  process.env.INPUT_PROJECT_ID = process.env.VADDY_PROJECT_ID
+  const ip = path.join(__dirname, 'index.js');
+  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
+});
+
+
+test('test run V2 with crawl_id', async() => {
+  if (!(process.env.VADDY_PROJECT_ID)) {
+    console.log('VADDY_PROJECT_ID is empty')
+    return
+  }
+  process.env.INPUT_USER = process.env.VADDY_USER
+  process.env.INPUT_AUTH_KEY = process.env.VADDY_AUTH_KEY
+  process.env.INPUT_PROJECT_ID = process.env.VADDY_PROJECT_ID
+  process.env.INPUT_CRAWL_ID = process.env.VADDY_CRAWL_ID
+  const ip = path.join(__dirname, 'index.js');
+  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
+});
+

@@ -9,6 +9,7 @@ const { spawn, execSync } = require('child_process');
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
+const api_version_v2 = '/v2'
 
 function sleep(waitSec) {
     return new Promise(function (resolve) {
@@ -20,6 +21,7 @@ class VAddy {
   constructor() {
     this.user = core.getInput('user')
     this.authKey = core.getInput('auth_key')
+    this.projectId = core.getInput('project_id')
     this.fqdn = core.getInput('fqdn')
     this.verificationCode = core.getInput('verification_code')
     this.privateKey = core.getInput('private_key')
@@ -34,6 +36,7 @@ class VAddy {
   setSecret() {
     core.setSecret('user')
     core.setSecret('auth_key')
+    core.setSecret('project_id')
     core.setSecret('fqdn')
     core.setSecret('verification_code')
     core.setSecret('private_key')
@@ -117,6 +120,20 @@ class VAddy {
     return obj.running_process
   }
 
+  async runCheckV2() {
+    let url = new URL(api_version_v2 + '/scan/runcheck', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('project_id', this.projectId)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj.running_process
+  }
+
   async waitRunningProcess(timeout) {
     let rp = await this.runCheck()
     for (var i = 0; i < timeout; i++) {
@@ -130,6 +147,19 @@ class VAddy {
     return rp
   }
 
+  async waitRunningProcessV2(timeout) {
+    let rp = await this.runCheckV2()
+    for (var i = 0; i < timeout; i++) {
+      if (rp === 0) {
+        return rp
+      }
+      core.info('wait for running process: ' + rp)
+      await sleep(1)
+      rp = await this.runCheckV2()
+    }
+    return rp
+  }
+
   async startScan() {
     let url = new URL(api_version_v1 + '/scan', endpoint)
     let data = {
@@ -138,6 +168,29 @@ class VAddy {
       'auth_key': this.authKey,
       'fqdn': this.fqdn,
       'verification_code': this.verificationCode,
+    }
+    if (this.crawlId) {
+      data['crawl_id'] = this.crawlId
+    }
+    const postData = querystring.stringify(data)
+    let res = await this.http.post(url.toString(), postData, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    })
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj.scan_id
+  }
+
+  async startScanV2() {
+    let url = new URL(api_version_v2 + '/scan', endpoint)
+    let data = {
+      'action': 'start',
+      'user': this.user,
+      'auth_key': this.authKey,
+      'project_id': this.projectId,
     }
     if (this.crawlId) {
       data['crawl_id'] = this.crawlId
@@ -170,11 +223,34 @@ class VAddy {
     return obj
   }
 
+  async getScanResultV2(scanId) {
+    let url = new URL(api_version_v2 + '/scan/result', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('scan_id', scanId)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj
+  }
+
   async waitScan(scanId) {
     let result = await this.getScanResult(scanId)
     while (result.status === 'scanning') {
       await sleep(5)
       result = await this.getScanResult(scanId)
+    }
+    return result
+  }
+
+  async waitScanV2(scanId) {
+    let result = await this.getScanResultV2(scanId)
+    while (result.status === 'scanning') {
+      await sleep(5)
+      result = await this.getScanResultV2(scanId)
     }
     return result
   }

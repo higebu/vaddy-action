@@ -8,6 +8,7 @@ const fs = require('fs')
 beforeEach(() => {
   process.env.INPUT_USER = 'user'
   process.env.INPUT_AUTH_KEY = 'auth_key'
+  process.env.INPUT_PROJECT_ID = '6eb1f9fcbdb6a5a'
   process.env.INPUT_FQDN = 'fqdn'
   process.env.INPUT_VERIFICATION_CODE = 'verification_code'
   process.env.INPUT_PRIVATE_KEY = 'private_key'
@@ -273,6 +274,151 @@ describe('api tests', () => {
       })
       .reply(200, {running_process: 1})
     const rp = await vaddy.waitRunningProcess(1)
+    expect(rp).toBe(1)
+    scope.done()
+  })
+})
+
+describe('api v2 tests', () => {
+  let vaddy = new VAddy()
+
+  beforeEach(() => {
+    vaddy = new VAddy()
+  })
+
+  test('test startScanV2', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .post('/v2/scan')
+      .reply(200, {scan_id: '12345'})
+    const scanId = await vaddy.startScanV2()
+    expect(scanId).toBe('12345')
+    scope.done()
+  })
+  
+  test('test startScanV2 with crawl_id', async() => {
+    vaddy.crawlId = 'crawl_id'
+    const scope = nock('https://api.vaddy.net')
+      .post('/v2/scan')
+      .reply(200, {scan_id: '12345'})
+    const scanId = await vaddy.startScanV2()
+    expect(scanId).toBe('12345')
+    scope.done()
+  })
+  
+  test('test startScanV2 failed', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .post('/v2/scan')
+      .reply(400, {error_message: 'error!'})
+    await expect(vaddy.startScanV2()).rejects.toThrow('error!')
+    scope.done()
+  })
+  
+  test('test getScanResultV2', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        scan_id: '12345'
+      })
+      .reply(200, {status: 'scanning'})
+    const result = await vaddy.getScanResultV2('12345')
+    expect(result.status).toBe('scanning')
+    scope.done()
+  })
+  
+  test('test getScanResultV2 failed', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        scan_id: '12345'
+      })
+      .reply(400, {error_message: 'error!'})
+    await expect(vaddy.getScanResultV2('12345')).rejects.toThrow('error!')
+    scope.done()
+  })
+
+  test('test waitScanV2', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        scan_id: '12345'
+      })
+      .reply(200, {status: 'scanning'})
+      .get('/v2/scan/result')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        scan_id: '12345'
+      })
+      .reply(200, {status: 'finish'})
+    const result = await vaddy.waitScanV2('12345')
+    expect(result.status).toBe('finish')
+    scope.done()
+  })
+
+  test('test runCheckV2', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        project_id: '6eb1f9fcbdb6a5a',
+      })
+      .reply(200, {running_process: 0})
+    const rp = await vaddy.runCheckV2()
+    expect(rp).toBe(0)
+    scope.done()
+  })
+  
+  test('test runCheckV2 failed', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        project_id: '6eb1f9fcbdb6a5a',
+      })
+      .reply(400, {error_message: 'error!'})
+    await expect(vaddy.runCheckV2()).rejects.toThrow('error!')
+    scope.done()
+  })
+
+  test('test waitRunningProcessV2 0', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        project_id: '6eb1f9fcbdb6a5a',
+      })
+      .reply(200, {running_process: 0})
+    const rp = await vaddy.waitRunningProcessV2(1)
+    expect(rp).toBe(0)
+    scope.done()
+  })
+
+  test('test waitRunningProcessV2 1', async() => {
+    const scope = nock('https://api.vaddy.net')
+      .get('/v2/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        project_id: '6eb1f9fcbdb6a5a',
+      })
+      .reply(200, {running_process: 1})
+      .get('/v2/scan/runcheck')
+      .query({
+        user: 'user',
+        auth_key: 'auth_key',
+        project_id: '6eb1f9fcbdb6a5a',
+      })
+      .reply(200, {running_process: 1})
+    const rp = await vaddy.waitRunningProcessV2(1)
     expect(rp).toBe(1)
     scope.done()
   })
