@@ -24,10 +24,12 @@ async function scanV2(vaddy) {
     if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
+      setOutput(result)
       if (result.alert_count > 0) {
         throw new Error('alert_count: ' + result.alert_count)
       }
     } else {
+      core.setOutput('scan_finished', false)
       throw new Error('status: ' + result.status)
     }
   }
@@ -63,11 +65,13 @@ async function scanV1(vaddy) {
     if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
+      setOutput(result)
       if (result.alert_count > 0) {
         sp.kill()
         throw new Error('alert_count: ' + result.alert_count)
       }
     } else {
+      core.setOutput('scan_finished', false)
       sp.kill()
       throw new Error('status: ' + result.status)
     }
@@ -76,6 +80,19 @@ async function scanV1(vaddy) {
   catch (err) {
     core.setFailed(err.message);
   }
+}
+
+function setOutput(result) {
+  core.setOutput('scan_finished', true)
+  core.setOutput('project_id', result.project_id)
+  core.setOutput('scan_id', result.scan_id)
+  core.setOutput('scan_count', result.scan_count)
+  core.setOutput('alert_count', result.alert_count)
+  core.setOutput('scan_result_url', result.scan_result_url)
+  core.setOutput('complete', result.complete)
+  core.setOutput('crawl_id', result.crawl_id)
+  core.setOutput('crawl_label', result.crawl_label)
+  core.setOutput('scan_list', result.scan_list)
 }
 
 run()

@@ -7,23 +7,7 @@ GitHub Action to run vulnerability scan with [VAddy](https://vaddy.net/).
 [![CodeFactor](https://www.codefactor.io/repository/github/higebu/actions-vaddy/badge)](https://www.codefactor.io/repository/github/higebu/actions-vaddy)
 [![Maintainability](https://api.codeclimate.com/v1/badges/61850855568e055c7624/maintainability)](https://codeclimate.com/github/higebu/actions-vaddy/maintainability)
 
-# Requirements
-
-If you want to scan the server runs on GitHub Actions, your project should be V1(VAddy PrivateNet) project. See [VAddy PrivateNet Quickstart Guide](https://support.vaddy.net/hc/en-us/sections/115002520287-VAddy-PrivateNet-Quickstart-Guide)
-
-* User ID and API Auth Key from https://console.vaddy.net/user/webapi.
-* V2 project
-    * Project ID from `Server` page.
-* V1 project
-    * FQDN.
-    * Verification code of your FQDN
-    * Private key for SSH tunnel(Optional)
-        * You can get the key from `privatenet/vaddy/ssh/id_rsa` in [go-vaddy](https://github.com/vaddy/go-vaddy). After running `vaddy_privatenet.sh connect`
-    * Local Web Server IP address
-        * ex. `127.0.0.1`
-    * Local Web Server Port Number
-
-# Example
+# Setting up this action
 
 ## V2 project
 
@@ -48,6 +32,8 @@ jobs:
 ```
 
 ## V1 project
+
+If you want to scan the server runs on GitHub Actions, your project should be V1(VAddy PrivateNet) project. See [VAddy PrivateNet Quickstart Guide](https://support.vaddy.net/hc/en-us/sections/115002520287-VAddy-PrivateNet-Quickstart-Guide)
 
 ```yaml
 name: test
@@ -77,6 +63,34 @@ jobs:
 ```
 
 For more details, see [Example](https://github.com/higebu/actions-vaddy-example) and [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions).
+
+
+# Configurations
+
+| input | description |
+|:---:|---|
+| `user`              | Vaddy User ID from https://console.vaddy.net/user/webapi. |
+| `auth_key`          | Vaddy API Auth Key https://console.vaddy.net/user/webapi. |
+| `project_id`        | A project ID from Server page. Required for V2 project. |
+| `crawl_id`          | A crawl ID. Optional. |
+| `fqdn`              | A FQDN of the server. Required for V1 project |
+| `verification_code` | A verification code for the FQDN. Required for V1 project. |
+| `private_key`       | A ssh private key. Optional for V1 project. You can get the key from `privatenet/vaddy/ssh/id_rsa` in [go-vaddy](https://github.com/vaddy/go-vaddy). After running `vaddy_privatenet.sh connect`. |
+| `local_ip`          | A local IP address for the server. Required for V1 project |
+| `local_port`        | A local port for the server. Required for V1 project |
+
+| output | description |
+|:---:|---|
+| `scan_finished`   | `true` if the scan was finished, `false` otherwise. |
+| `project_id`      | Project ID of the scan. |
+| `scan_id`         | Scan ID of the scan. |
+| `scan_count`      | Scan count of the scan. |
+| `alert_count`     | Alert count of the scan. |
+| `scan_result_url` | Scan result URL of the scan. |
+| `complete`        | Complete of the scan. |
+| `crawl_id`        | Crawl ID of the scan. |
+| `crawl_label`     | Crawl label of the scan. |
+| `scan_list`       | Scan list of the scan. |
 
 # License
 

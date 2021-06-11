@@ -429,9 +429,45 @@ const VAddy = __webpack_require__(114)
 const core = __webpack_require__(470)
 
 async function run() {
+  let vaddy = new VAddy()
+  vaddy.setSecret()
+  if (vaddy.projectId) {
+    await scanV2(vaddy)
+  } else {
+    await scanV1(vaddy)
+  }
+}
+
+// scanV2 scans vaddy V2 project.
+async function scanV2(vaddy) {
   try { 
-    let vaddy = new VAddy()
-    vaddy.setSecret()
+    const rp = await vaddy.waitRunningProcessV2(10)
+    if (rp > 0) {
+      throw new Error('running_process: ' + rp)
+    }
+    const scanId = await vaddy.startScanV2()
+    core.info('scan_id: ' + scanId)
+    let result = await vaddy.waitScanV2(scanId)
+    if (result.status === 'finish') {
+      core.info('finish')
+      core.info('scan_result_url: ' + result.scan_result_url)
+      setOutput(result)
+      if (result.alert_count > 0) {
+        throw new Error('alert_count: ' + result.alert_count)
+      }
+    } else {
+      core.setOutput('scan_finished', false)
+      throw new Error('status: ' + result.status)
+    }
+  }
+  catch (err) {
+    core.setFailed(err.message);
+  }
+}
+
+// scanV1 scans vaddy V1(Private Net) project.
+async function scanV1(vaddy) {
+  try { 
     const rp = await vaddy.waitRunningProcess(10)
     if (rp > 0) {
       throw new Error('running_process: ' + rp)
@@ -456,11 +492,13 @@ async function run() {
     if (result.status === 'finish') {
       core.info('finish')
       core.info('scan_result_url: ' + result.scan_result_url)
+      setOutput(result)
       if (result.alert_count > 0) {
         sp.kill()
         throw new Error('alert_count: ' + result.alert_count)
       }
     } else {
+      core.setOutput('scan_finished', false)
       sp.kill()
       throw new Error('status: ' + result.status)
     }
@@ -469,6 +507,19 @@ async function run() {
   catch (err) {
     core.setFailed(err.message);
   }
+}
+
+function setOutput(result) {
+  core.setOutput('scan_finished', true)
+  core.setOutput('project_id', result.project_id)
+  core.setOutput('scan_id', result.scan_id)
+  core.setOutput('scan_count', result.scan_count)
+  core.setOutput('alert_count', result.alert_count)
+  core.setOutput('scan_result_url', result.scan_result_url)
+  core.setOutput('complete', result.complete)
+  core.setOutput('crawl_id', result.crawl_id)
+  core.setOutput('crawl_label', result.crawl_label)
+  core.setOutput('scan_list', result.scan_list)
 }
 
 run()
@@ -490,6 +541,7 @@ const { spawn, execSync } = __webpack_require__(129);
 
 const endpoint = 'https://api.vaddy.net'
 const api_version_v1 = '/v1'
+const api_version_v2 = '/v2'
 
 function sleep(waitSec) {
     return new Promise(function (resolve) {
@@ -501,6 +553,7 @@ class VAddy {
   constructor() {
     this.user = core.getInput('user')
     this.authKey = core.getInput('auth_key')
+    this.projectId = core.getInput('project_id')
     this.fqdn = core.getInput('fqdn')
     this.verificationCode = core.getInput('verification_code')
     this.privateKey = core.getInput('private_key')
@@ -515,6 +568,7 @@ class VAddy {
   setSecret() {
     core.setSecret('user')
     core.setSecret('auth_key')
+    core.setSecret('project_id')
     core.setSecret('fqdn')
     core.setSecret('verification_code')
     core.setSecret('private_key')
@@ -598,6 +652,20 @@ class VAddy {
     return obj.running_process
   }
 
+  async runCheckV2() {
+    let url = new URL(api_version_v2 + '/scan/runcheck', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('project_id', this.projectId)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj.running_process
+  }
+
   async waitRunningProcess(timeout) {
     let rp = await this.runCheck()
     for (var i = 0; i < timeout; i++) {
@@ -611,6 +679,19 @@ class VAddy {
     return rp
   }
 
+  async waitRunningProcessV2(timeout) {
+    let rp = await this.runCheckV2()
+    for (var i = 0; i < timeout; i++) {
+      if (rp === 0) {
+        return rp
+      }
+      core.info('wait for running process: ' + rp)
+      await sleep(1)
+      rp = await this.runCheckV2()
+    }
+    return rp
+  }
+
   async startScan() {
     let url = new URL(api_version_v1 + '/scan', endpoint)
     let data = {
@@ -619,6 +700,29 @@ class VAddy {
       'auth_key': this.authKey,
       'fqdn': this.fqdn,
       'verification_code': this.verificationCode,
+    }
+    if (this.crawlId) {
+      data['crawl_id'] = this.crawlId
+    }
+    const postData = querystring.stringify(data)
+    let res = await this.http.post(url.toString(), postData, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    })
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj.scan_id
+  }
+
+  async startScanV2() {
+    let url = new URL(api_version_v2 + '/scan', endpoint)
+    let data = {
+      'action': 'start',
+      'user': this.user,
+      'auth_key': this.authKey,
+      'project_id': this.projectId,
     }
     if (this.crawlId) {
       data['crawl_id'] = this.crawlId
@@ -651,11 +755,34 @@ class VAddy {
     return obj
   }
 
+  async getScanResultV2(scanId) {
+    let url = new URL(api_version_v2 + '/scan/result', endpoint)
+    url.searchParams.set('user', this.user)
+    url.searchParams.set('auth_key', this.authKey)
+    url.searchParams.set('scan_id', scanId)
+    let res = await this.http.get(url.toString())
+    let body = await res.readBody()
+    let obj = JSON.parse(body)
+    if (res.message.statusCode !== 200) {
+      throw new Error(obj.error_message)
+    }
+    return obj
+  }
+
   async waitScan(scanId) {
     let result = await this.getScanResult(scanId)
     while (result.status === 'scanning') {
       await sleep(5)
       result = await this.getScanResult(scanId)
+    }
+    return result
+  }
+
+  async waitScanV2(scanId) {
+    let result = await this.getScanResultV2(scanId)
+    while (result.status === 'scanning') {
+      await sleep(5)
+      result = await this.getScanResultV2(scanId)
     }
     return result
   }
