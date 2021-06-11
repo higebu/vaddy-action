@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/higebu/actions-vaddy/compare/v1.2.0...v1.3.0) (2021-06-11)
+
+
+### Features
+
+* add outputs ([660d1b0](https://www.github.com/higebu/actions-vaddy/commit/660d1b00f3a37baa9c03ae3aae3f75b0262c50bf))
+
 ## [1.2.0](https://www.github.com/higebu/actions-vaddy/compare/v1.1.1...v1.2.0) (2021-06-11)
 
 
