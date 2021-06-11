@@ -40,7 +40,9 @@ Add the following secrets to your project.
 ```yaml
 name: test
 
-on: [push, pull_request]
+on:
+  schedule:
+    - cron:  '0 3 * * *'
 
 jobs:
   test:
