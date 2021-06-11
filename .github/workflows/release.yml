@@ -1,0 +1,56 @@
+on:
+  push:
+    branches:
+      - master
+name: release-please
+env:
+  ACTION_NAME: vaddy-vulnerability-scan
+jobs:
+  release-please-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - id: release-pr
+        uses: GoogleCloudPlatform/release-please-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: ${{env.ACTION_NAME}}
+          command: release-pr
+      - id: label
+        if: ${{ steps.release-pr.outputs.pr }}
+        uses: actions/github-script@v3
+        with:
+            github-token: ${{secrets.GITHUB_TOKEN}}
+            script: |
+              const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+              await github.issues.addLabels({
+                owner,
+                repo,
+                issue_number: ${{steps.release-pr.outputs.pr}},
+                labels: ['autorelease: pending']
+              });
+              console.log(`Tagged ${{steps.release-pr.outputs.pr}}`)
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          release-type: node
+          package-name: ${{env.ACTION_NAME}}
+          command: github-release
+      - uses: actions/checkout@v2
+      - name: tag major and patch versions
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN}}@github.com/higebu/actions-vaddy.git"
+          git tag -d v${{ steps.release.outputs.major }} || true
+          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git push origin :v${{ steps.release.outputs.major }} || true
+          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+          git push origin v${{ steps.release.outputs.major }}
+          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
