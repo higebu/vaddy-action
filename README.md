@@ -9,33 +9,23 @@ GitHub Action to run vulnerability scan with [VAddy](https://vaddy.net/).
 
 # Requirements
 
-* If you want scan the server runs on GitHub Actions, your project should be V1(VAddy PrivateNet) project. See [VAddy PrivateNet Quickstart Guide](https://support.vaddy.net/hc/en-us/sections/115002520287-VAddy-PrivateNet-Quickstart-Guide)
+If you want to scan the server runs on GitHub Actions, your project should be V1(VAddy PrivateNet) project. See [VAddy PrivateNet Quickstart Guide](https://support.vaddy.net/hc/en-us/sections/115002520287-VAddy-PrivateNet-Quickstart-Guide)
 
-# Usage
-
-Add the following secrets to your project.
-
-* `VADDY_USER`: Required
-    * Login UserID
-* `VADDY_AUTH_KEY`: Required
-    * VAddy WebAPI Key from https://console.vaddy.net/user/webapi
-* `VADDY_PROJECT_ID`: Required for V2 project
-    * Vaddy Project ID from `Server` page.
-* `VADDY_FQDN`: Required for V1 project
-    * Server FQDN
-* `VADDY_VERIFICATION_CODE`: Required for V1 project
+* User ID and API Auth Key from https://console.vaddy.net/user/webapi.
+* V2 project
+    * Project ID from `Server` page.
+* V1 project
+    * FQDN.
     * Verification code of your FQDN
-* `VADDY_PRIVATE_KEY`: Optional for V1 project
-    * Private key for SSH tunnel
-    * You can get the key from `privatenet/vaddy/ssh/id_rsa` in [go-vaddy](https://github.com/vaddy/go-vaddy). After running `vaddy_privatenet.sh connect`
-    * If you don't set `VADDY_PRIVATE_KEY`, actions-vaddy generates SSH key every time.
-* `VADDY_YOUR_LOCAL_IP`: Required for V1 project
-    * Your local Web Server IP address
-    * ex. `127.0.0.1`
-* `VADDY_YOUR_LOCAL_PORT`: Required for V1 project
-    * Your local Web Server Port Number
+    * Private key for SSH tunnel(Optional)
+        * You can get the key from `privatenet/vaddy/ssh/id_rsa` in [go-vaddy](https://github.com/vaddy/go-vaddy). After running `vaddy_privatenet.sh connect`
+    * Local Web Server IP address
+        * ex. `127.0.0.1`
+    * Local Web Server Port Number
 
-## Workflow example for V2 project.
+# Example
+
+## V2 project
 
 ```yaml
 name: test
@@ -52,12 +42,12 @@ jobs:
     - uses: higebu/actions-vaddy@master
       with:
         user: ${{ secrets.VADDY_USER }}
-        auth_key: ${{ secrets.VADDY_AUTH_KEY }}
+        auth_key: ${{ secrets.VADDY_TOKEN }}
         project_id: ${{ secrets.VADDY_PROJECT_ID }}
-        # crawl_id: 12345
+        # crawl_id: ${{ secrets.VADDY_CRAWL_ID }}
 ```
 
-## Workflow example for V1 project.
+## V1 project
 
 ```yaml
 name: test
@@ -73,17 +63,17 @@ jobs:
       run: ./run.sh &
       env:
         VADDY_VERIFICATION_CODE: ${{ secrets.VADDY_VERIFICATION_CODE }}
-        LISTEN_ADDR: ${{ secrets.VADDY_YOUR_LOCAL_IP }}:${{ secrets.VADDY_YOUR_LOCAL_PORT }}
+        LISTEN_ADDR: ${{ secrets.VADDY_LOCAL_IP }}:${{ secrets.VADDY_LOCAL_PORT }}
     - uses: higebu/actions-vaddy@master
       with:
         user: ${{ secrets.VADDY_USER }}
-        auth_key: ${{ secrets.VADDY_AUTH_KEY }}
+        auth_key: ${{ secrets.VADDY_TOKEN }}
         fqdn: ${{ secrets.VADDY_FQDN }}
         verification_code: ${{ secrets.VADDY_VERIFICATION_CODE }}
         private_key: ${{ secrets.VADDY_PRIVATE_KEY }}
-        local_ip: ${{ secrets.VADDY_YOUR_LOCAL_IP }}
-        local_port: ${{ secrets.VADDY_YOUR_LOCAL_PORT }}
-        # crawl_id: 12345
+        local_ip: ${{ secrets.VADDY_LOCAL_IP }}
+        local_port: ${{ secrets.VADDY_LOCAL_PORT }}
+        # crawl_id: ${{ secrets.VADDY_CRAWL_ID }}
 ```
 
 For more details, see [Example](https://github.com/higebu/actions-vaddy-example) and [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions).
