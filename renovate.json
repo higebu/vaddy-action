@@ -20,5 +20,9 @@
     "helpers:disableTypesNodeMajor"
   ],
   "prConcurrentLimit": 1,
-  "bumpVersion": "patch"
+  "bumpVersion": "patch",
+  "postUpgradeTasks": {
+    "commands": ["npm package"],
+    "executionMode": "update"
+  }
 }
