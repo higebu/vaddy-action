@@ -50,7 +50,7 @@ jobs:
       env:
         VADDY_VERIFICATION_CODE: ${{ secrets.VADDY_VERIFICATION_CODE }}
         LISTEN_ADDR: ${{ secrets.VADDY_YOUR_LOCAL_IP }}:${{ secrets.VADDY_YOUR_LOCAL_PORT }}
-    - uses: higebu/actions-vaddy@v1
+    - uses: higebu/actions-vaddy@master
       with:
         user: ${{ secrets.VADDY_USER }}
         auth_key: ${{ secrets.VADDY_AUTH_KEY }}
