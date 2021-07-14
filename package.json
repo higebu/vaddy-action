@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js vaddy.js",
-    "package": "ncc build index.js -o dist",
-    "test": "eslint index.js vaddy.js && jest",
+    "build": "ncc build index.js -o dist",
+    "test": "jest",
     "integration": "jest -c jest.config.integration.js"
   },
   "repository": {
