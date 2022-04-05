@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.2](https://github.com/higebu/actions-vaddy/compare/v1.3.1...v1.3.2) (2022-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update codecov/codecov-action action to v3 ([636e134](https://github.com/higebu/actions-vaddy/commit/636e134651d2e87c08e560295824eb6e1ba01c08))
+
 ### [1.3.1](https://github.com/higebu/actions-vaddy/compare/v1.3.0...v1.3.1) (2022-04-05)
 
 
