@@ -68,7 +68,7 @@ jobs:
           command: release-pr
       - id: label
         if: ${{ steps.release-pr.outputs.pr }}
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
             github-token: ${{secrets.GITHUB_TOKEN}}
             script: |
