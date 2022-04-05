@@ -1,28 +1,6 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    ":separateMajorReleases",
-    ":combinePatchMinorReleases",
-    ":ignoreUnstable",
-    ":prImmediately",
-    ":semanticPrefixFixDepsChoreOthers",
-    ":updateNotScheduled",
-    ":automergeMinor",
-    ":automergeDigest",
-    ":ignoreModulesAndTests",
-    ":maintainLockFilesDisabled",
-    ":autodetectPinVersions",
-    ":prHourlyLimitNone",
-    "group:monorepos",
-    "group:recommended",
-    ":timezone(Asia/Tokyo)",
-    "schedule:nonOfficeHours",
-    ":label(renovate)",
-    "helpers:disableTypesNodeMajor"
-  ],
-  "prConcurrentLimit": 1,
-  "bumpVersion": "patch",
-  "postUpgradeTasks": {
-    "commands": ["npm package"],
-    "executionMode": "update"
-  }
+    "local>higebu/renovate-config"
+  ]
 }
