@@ -46,7 +46,7 @@ jobs:
       with:
         token: ${{ secrets.ACTIONS_BOT_TOKEN }}
         commit-message: Build dist
-        author: "higebu <yuya.kusakabe@gmail.com>"
+        author: "Yuya Kusakabe <yuya.kusakabe@gmail.com>"
         title: "chore: build dist"
         body: |
           Build dist PR
@@ -73,7 +73,7 @@ jobs:
             github-token: ${{secrets.GITHUB_TOKEN}}
             script: |
               const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
-              await github.issues.addLabels({
+              await github.rest.issues.addLabels({
                 owner,
                 repo,
                 issue_number: ${{steps.release-pr.outputs.pr}},
