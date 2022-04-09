@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.3](https://github.com/higebu/actions-vaddy/compare/v1.3.2...v1.3.3) (2022-04-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eslint to v8.13.0 ([fb41a6a](https://github.com/higebu/actions-vaddy/commit/fb41a6af4d54565a60027d6655e966fbc3d22399))
+
 ### [1.3.2](https://github.com/higebu/actions-vaddy/compare/v1.3.1...v1.3.2) (2022-04-05)
 
 
