@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.4.2](https://github.com/higebu/actions-vaddy/compare/v1.4.1...v1.4.2) (2022-05-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eslint to v8.15.0 ([6b092f4](https://github.com/higebu/actions-vaddy/commit/6b092f48893994c320fcef477c6cf190ed0154c8))
+* **deps:** update dependency jest to v28.0.3 ([81f59a1](https://github.com/higebu/actions-vaddy/commit/81f59a1b3ff902e6b30c233ce246dc73e24c024a))
+* **deps:** update dependency jest to v28.1.0 ([e80f95f](https://github.com/higebu/actions-vaddy/commit/e80f95fc0e8898532c2200d962aa4536e50c8bee))
+
 ### [1.4.1](https://github.com/higebu/actions-vaddy/compare/v1.4.0...v1.4.1) (2022-04-27)
 
 
