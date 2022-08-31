@@ -1,6 +1,6 @@
 {
   "name": "actions-vaddy",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "GitHub Action to run vulnerability scan with VAddy",
   "main": "index.js",
   "scripts": {
