@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+    - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4
     - name: install
       run: npm ci
     - name: build
@@ -91,7 +91,7 @@ jobs:
           release-type: node
           package-name: ${{env.ACTION_NAME}}
           command: github-release
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4
       - name: tag major and patch versions
         run: |
           git config user.name github-actions[bot]
