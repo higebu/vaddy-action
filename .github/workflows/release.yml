@@ -4,7 +4,7 @@ on:
       - master
 name: release-please
 env:
-  ACTION_NAME: vaddy-vulnerability-scan
+  ACTION_NAME: vaddy-action
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -68,8 +68,7 @@ jobs:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           release-type: node
           fork: true
-          package-name: ${{env.ACTION_NAME}}
-          command: release-pr
+          skip-github-release: true
       - id: label
         if: ${{ steps.release-pr.outputs.pr }}
         uses: actions/github-script@v7
@@ -93,14 +92,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: ${{env.ACTION_NAME}}
-          command: github-release
+          skip-github-pull-request: true
       - uses: actions/checkout@v4
       - name: tag major and patch versions
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN}}@github.com/higebu/actions-vaddy.git"
+          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN}}@github.com/higebu/vaddy-action.git"
           git tag -d v${{ steps.release.outputs.major }} || true
           git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
           git push origin :v${{ steps.release.outputs.major }} || true

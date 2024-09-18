@@ -42,7 +42,7 @@ describe('ssh key tests', () => {
   let td = ''
 
   beforeEach(() => {
-    td = fs.mkdtempSync(path.join(os.tmpdir(), 'actions-vaddy-test-'))
+    td = fs.mkdtempSync(path.join(os.tmpdir(), 'vaddy-action-test-'))
     vaddy = new VAddy()
     vaddy.sshdir = path.join(td, 'ssh')
     vaddy.keypath = path.join(vaddy.sshdir, 'key')
@@ -69,7 +69,7 @@ describe('api tests', () => {
   let td = ''
 
   beforeEach(() => {
-    td = fs.mkdtempSync(path.join(os.tmpdir(), 'actions-vaddy-test-'))
+    td = fs.mkdtempSync(path.join(os.tmpdir(), 'vaddy-action-test-'))
     vaddy = new VAddy()
     vaddy.sshdir = path.join(td, 'ssh')
     vaddy.keypath = path.join(vaddy.sshdir, 'key')

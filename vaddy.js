@@ -30,7 +30,7 @@ class VAddy {
     this.crawlId = core.getInput('crawl_id')
     this.sshdir = path.join(os.homedir(), '/vaddy/ssh')
     this.keypath = path.join(this.sshdir, 'key')
-    this.http = new httpm.HttpClient('actions-vaddy')
+    this.http = new httpm.HttpClient('vaddy-action')
   }
 
   setSecret() {

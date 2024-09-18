@@ -1,5 +1,5 @@
 {
-  "name": "actions-vaddy",
+  "name": "vaddy-action",
   "version": "1.4.2",
   "description": "GitHub Action to run vulnerability scan with VAddy",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/higebu/actions-vaddy.git"
+    "url": "git+https://github.com/higebu/vaddy-action.git"
   },
   "keywords": [
     "VAddy",
@@ -22,9 +22,9 @@
   "author": "Yuya Kusakabe <yuya.kusakabe@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/higebu/actions-vaddy/issues"
+    "url": "https://github.com/higebu/vaddy-action/issues"
   },
-  "homepage": "https://github.com/higebu/actions-vaddy#readme",
+  "homepage": "https://github.com/higebu/vaddy-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
     "@actions/exec": "^1.0.3",

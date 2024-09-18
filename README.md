@@ -1,11 +1,11 @@
-# actions-vaddy
+# vaddy-action
 
 GitHub Action to run vulnerability scan with [VAddy](https://vaddy.net/).
 
-[![test](https://github.com/higebu/actions-vaddy/workflows/test/badge.svg)](https://github.com/higebu/actions-vaddy/actions)
-[![codecov](https://codecov.io/gh/higebu/actions-vaddy/branch/master/graph/badge.svg)](https://codecov.io/gh/higebu/actions-vaddy)
-[![CodeFactor](https://www.codefactor.io/repository/github/higebu/actions-vaddy/badge)](https://www.codefactor.io/repository/github/higebu/actions-vaddy)
-[![Maintainability](https://api.codeclimate.com/v1/badges/61850855568e055c7624/maintainability)](https://codeclimate.com/github/higebu/actions-vaddy/maintainability)
+[![test](https://github.com/higebu/vaddy-action/workflows/test/badge.svg)](https://github.com/higebu/vaddy-action/actions)
+[![codecov](https://codecov.io/gh/higebu/vaddy-action/branch/master/graph/badge.svg)](https://codecov.io/gh/higebu/vaddy-action)
+[![CodeFactor](https://www.codefactor.io/repository/github/higebu/vaddy-action/badge)](https://www.codefactor.io/repository/github/higebu/vaddy-action)
+[![Maintainability](https://api.codeclimate.com/v1/badges/61850855568e055c7624/maintainability)](https://codeclimate.com/github/higebu/vaddy-action/maintainability)
 
 # Setting up this action
 
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: higebu/actions-vaddy@master
+    - uses: higebu/vaddy-action@master
       with:
         user: ${{ secrets.VADDY_USER }}
         auth_key: ${{ secrets.VADDY_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
       env:
         VADDY_VERIFICATION_CODE: ${{ secrets.VADDY_VERIFICATION_CODE }}
         LISTEN_ADDR: ${{ secrets.VADDY_LOCAL_IP }}:${{ secrets.VADDY_LOCAL_PORT }}
-    - uses: higebu/actions-vaddy@master
+    - uses: higebu/vaddy-action@master
       with:
         user: ${{ secrets.VADDY_USER }}
         auth_key: ${{ secrets.VADDY_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
         # crawl_id: ${{ secrets.VADDY_CRAWL_ID }}
 ```
 
-For more details, see [Example](https://github.com/higebu/actions-vaddy-example) and [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions).
+For more details, see [Example](https://github.com/higebu/vaddy-action-example) and [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions).
 
 
 # Configurations
