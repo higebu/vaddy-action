@@ -3,6 +3,9 @@ on:
     branches:
       - master
 name: release-please
+permissions:
+  contents: write
+  pull-requests: write
 env:
   ACTION_NAME: vaddy-action
 jobs:
