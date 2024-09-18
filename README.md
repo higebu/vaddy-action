@@ -22,8 +22,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: higebu/vaddy-action@master
+    - uses: actions/checkout@v4
+    - uses: higebu/vaddy-action@v1
       with:
         user: ${{ secrets.VADDY_USER }}
         auth_key: ${{ secrets.VADDY_TOKEN }}
@@ -44,13 +44,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: run server
       run: ./run.sh &
       env:
         VADDY_VERIFICATION_CODE: ${{ secrets.VADDY_VERIFICATION_CODE }}
         LISTEN_ADDR: ${{ secrets.VADDY_LOCAL_IP }}:${{ secrets.VADDY_LOCAL_PORT }}
-    - uses: higebu/vaddy-action@master
+    - uses: higebu/vaddy-action@v1
       with:
         user: ${{ secrets.VADDY_USER }}
         auth_key: ${{ secrets.VADDY_TOKEN }}
