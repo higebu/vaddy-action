@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.4](https://github.com/higebu/vaddy-action/compare/v1.4.3...v1.4.4) (2024-09-18)
+
+
+### Bug Fixes
+
+* fix release workflow ([2f8f337](https://github.com/higebu/vaddy-action/commit/2f8f337783475fd56b8a444e7e203be4e35d7ddf))
+* update README ([5bd0d6e](https://github.com/higebu/vaddy-action/commit/5bd0d6eda61074c613b399bb7f0212ac0cc4c5a6))
+
 ## [1.4.3](https://github.com/higebu/vaddy-action/compare/v1.4.2...v1.4.3) (2024-09-18)
 
 
