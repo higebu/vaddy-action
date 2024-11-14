@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.5](https://github.com/higebu/vaddy-action/compare/v1.4.4...v1.4.5) (2024-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update codecov/codecov-action action to v5 ([#166](https://github.com/higebu/vaddy-action/issues/166)) ([eda89cc](https://github.com/higebu/vaddy-action/commit/eda89cc143b704a62faa085fda77a4a5107ca63a))
+* **deps:** update dependency @actions/core to v1.11.0 ([4bb987e](https://github.com/higebu/vaddy-action/commit/4bb987e1207c6c9f95071a6788bf5719d73c31fb))
+* **deps:** update dependency @actions/core to v1.11.1 ([ffd80d3](https://github.com/higebu/vaddy-action/commit/ffd80d36422643a21ad8440acf0f9eb76938b8f0))
+* **deps:** update dependency @vercel/ncc to v0.38.2 ([a31428b](https://github.com/higebu/vaddy-action/commit/a31428b74fb200f5efc5463505d7dda1bafef68f))
+* **deps:** update dependency eslint to v9.11.0 ([45fcf5d](https://github.com/higebu/vaddy-action/commit/45fcf5def0a3d8e349f54acf562e6a1daaeaee30))
+* **deps:** update dependency eslint to v9.11.1 ([264220a](https://github.com/higebu/vaddy-action/commit/264220a4efd453b483f5868c4a51867a15c094be))
+* **deps:** update dependency eslint to v9.12.0 ([33e8124](https://github.com/higebu/vaddy-action/commit/33e8124a125846f9b3b70dec89db9c0ada1c4f03))
+* **deps:** update dependency eslint to v9.13.0 ([cfb7a83](https://github.com/higebu/vaddy-action/commit/cfb7a8362f1581c8d44d7dffd8c0597d354acf74))
+* **deps:** update dependency eslint to v9.14.0 ([83d49d1](https://github.com/higebu/vaddy-action/commit/83d49d1349be674daab58340dcd56eab5b79320e))
+* **deps:** update dependency nock to v13.5.6 ([#165](https://github.com/higebu/vaddy-action/issues/165)) ([e8d94de](https://github.com/higebu/vaddy-action/commit/e8d94def73fabd933d44ec9e967462c53d98a31a))
+
 ## [1.4.4](https://github.com/higebu/vaddy-action/compare/v1.4.3...v1.4.4) (2024-09-18)
 
 
