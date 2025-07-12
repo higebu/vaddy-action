@@ -1,5 +1,44 @@
 # Changelog
 
+## [1.4.6](https://github.com/higebu/vaddy-action/compare/v1.4.5...v1.4.6) (2025-07-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @vercel/ncc to v0.38.3 ([#167](https://github.com/higebu/vaddy-action/issues/167)) ([0fbcd36](https://github.com/higebu/vaddy-action/commit/0fbcd36f12ef09ffb29f2385cdddd3ab0f92e8b5))
+* **deps:** update dependency eslint to v9.15.0 ([#169](https://github.com/higebu/vaddy-action/issues/169)) ([f673f51](https://github.com/higebu/vaddy-action/commit/f673f51e8838bcb9cb44b62164ce821719ce0830))
+* **deps:** update dependency eslint to v9.16.0 ([#170](https://github.com/higebu/vaddy-action/issues/170)) ([5162f17](https://github.com/higebu/vaddy-action/commit/5162f17050360da305cd3c2099b82b0ad091d722))
+* **deps:** update dependency eslint to v9.17.0 ([#171](https://github.com/higebu/vaddy-action/issues/171)) ([24e1473](https://github.com/higebu/vaddy-action/commit/24e14733b6e94c30b7125c1b207c6b90f2afedda))
+* **deps:** update dependency eslint to v9.18.0 ([#172](https://github.com/higebu/vaddy-action/issues/172)) ([b7118ec](https://github.com/higebu/vaddy-action/commit/b7118ec407f489ed05c3abab3651af7c0ea5d761))
+* **deps:** update dependency eslint to v9.19.0 ([#173](https://github.com/higebu/vaddy-action/issues/173)) ([22e7f2d](https://github.com/higebu/vaddy-action/commit/22e7f2d26cdfeb3356339a81c288dbe4a613146c))
+* **deps:** update dependency eslint to v9.20.0 ([#176](https://github.com/higebu/vaddy-action/issues/176)) ([1e01b55](https://github.com/higebu/vaddy-action/commit/1e01b55d58653ea0511fd4544b9b152fe6590497))
+* **deps:** update dependency eslint to v9.20.1 ([#177](https://github.com/higebu/vaddy-action/issues/177)) ([bf39419](https://github.com/higebu/vaddy-action/commit/bf3941944c6b7106c337f59ccc36632521b9accd))
+* **deps:** update dependency eslint to v9.21.0 ([#178](https://github.com/higebu/vaddy-action/issues/178)) ([b49fd35](https://github.com/higebu/vaddy-action/commit/b49fd35cd3cff4ac50d8540515c7bec93880e889))
+* **deps:** update dependency eslint to v9.22.0 ([#179](https://github.com/higebu/vaddy-action/issues/179)) ([f6a99f5](https://github.com/higebu/vaddy-action/commit/f6a99f5f5052f08c2cc003938a438deab6691782))
+* **deps:** update dependency eslint to v9.23.0 ([#181](https://github.com/higebu/vaddy-action/issues/181)) ([25611e8](https://github.com/higebu/vaddy-action/commit/25611e87b18b2d4f227acb4f532be7b6671b32d9))
+* **deps:** update dependency eslint to v9.24.0 ([#183](https://github.com/higebu/vaddy-action/issues/183)) ([f57cda9](https://github.com/higebu/vaddy-action/commit/f57cda901401c777287ac97f37fc03caa4d73f8b))
+* **deps:** update dependency eslint to v9.25.0 ([#185](https://github.com/higebu/vaddy-action/issues/185)) ([9eb86c2](https://github.com/higebu/vaddy-action/commit/9eb86c2b3d3a5ad9f066f54d424a40c76f6b949d))
+* **deps:** update dependency eslint to v9.25.1 ([#187](https://github.com/higebu/vaddy-action/issues/187)) ([c150542](https://github.com/higebu/vaddy-action/commit/c15054249deb70be6345f8763145d0e1761ae5f5))
+* **deps:** update dependency eslint to v9.26.0 ([#188](https://github.com/higebu/vaddy-action/issues/188)) ([3e34dda](https://github.com/higebu/vaddy-action/commit/3e34ddaee0cb02490d6516ad0424c7c714f777f9))
+* **deps:** update dependency eslint to v9.27.0 ([#189](https://github.com/higebu/vaddy-action/issues/189)) ([19c3ea9](https://github.com/higebu/vaddy-action/commit/19c3ea92c1383c17385ebce3f8b21267159129ac))
+* **deps:** update dependency eslint to v9.28.0 ([#191](https://github.com/higebu/vaddy-action/issues/191)) ([4a2599d](https://github.com/higebu/vaddy-action/commit/4a2599d44f76b711df1dd0c3e373bd78445d0a96))
+* **deps:** update dependency eslint to v9.29.0 ([#193](https://github.com/higebu/vaddy-action/issues/193)) ([c4542be](https://github.com/higebu/vaddy-action/commit/c4542be92537275c4971fbf45d1570ab3ed44f54))
+* **deps:** update dependency eslint to v9.30.0 ([#197](https://github.com/higebu/vaddy-action/issues/197)) ([9bad924](https://github.com/higebu/vaddy-action/commit/9bad9240e34827bcbfe188ecf33288fdb71ee970))
+* **deps:** update dependency eslint to v9.30.1 ([#198](https://github.com/higebu/vaddy-action/issues/198)) ([e42629f](https://github.com/higebu/vaddy-action/commit/e42629f7e5f8a6fa5f035c481cf00f98b2be8093))
+* **deps:** update dependency eslint to v9.31.0 ([#200](https://github.com/higebu/vaddy-action/issues/200)) ([c84e92c](https://github.com/higebu/vaddy-action/commit/c84e92c99dded8d90b355e53d66f4783d2c754bd))
+* **deps:** update dependency jest to v30 ([#192](https://github.com/higebu/vaddy-action/issues/192)) ([c43e551](https://github.com/higebu/vaddy-action/commit/c43e55168ee80d245f5fc7b32f9405f2e21c3e36))
+* **deps:** update dependency jest to v30.0.1 ([#194](https://github.com/higebu/vaddy-action/issues/194)) ([3ae7693](https://github.com/higebu/vaddy-action/commit/3ae76930b0e5a0afc554b1809478ec7b2d5ece89))
+* **deps:** update dependency jest to v30.0.2 ([#195](https://github.com/higebu/vaddy-action/issues/195)) ([d7743f8](https://github.com/higebu/vaddy-action/commit/d7743f8218b55665ddea3b582ef0ba2ebfab1489))
+* **deps:** update dependency jest to v30.0.3 ([#196](https://github.com/higebu/vaddy-action/issues/196)) ([e68491d](https://github.com/higebu/vaddy-action/commit/e68491d1d8a35d72f2b89d5a90a5a1b0ae9d0151))
+* **deps:** update dependency jest to v30.0.4 ([#199](https://github.com/higebu/vaddy-action/issues/199)) ([b033eb4](https://github.com/higebu/vaddy-action/commit/b033eb4b31903903010ebfb657ae6eda5ce7e0a4))
+* **deps:** update dependency nock to v14 ([#174](https://github.com/higebu/vaddy-action/issues/174)) ([b043d68](https://github.com/higebu/vaddy-action/commit/b043d68844ebb864b641335ff3f214b4c55406ec))
+* **deps:** update dependency nock to v14.0.1 ([#175](https://github.com/higebu/vaddy-action/issues/175)) ([f611bf1](https://github.com/higebu/vaddy-action/commit/f611bf114c17167456c3e37fed0d54815e9b5ff2))
+* **deps:** update dependency nock to v14.0.2 ([#182](https://github.com/higebu/vaddy-action/issues/182)) ([5564086](https://github.com/higebu/vaddy-action/commit/5564086442fe2b43b0cec4dc4fd708b3e7a6bfba))
+* **deps:** update dependency nock to v14.0.3 ([#184](https://github.com/higebu/vaddy-action/issues/184)) ([7643621](https://github.com/higebu/vaddy-action/commit/764362124bfb8b7891cfd53e1d9fa983f43972e7))
+* **deps:** update dependency nock to v14.0.4 ([#186](https://github.com/higebu/vaddy-action/issues/186)) ([4d605ff](https://github.com/higebu/vaddy-action/commit/4d605ff68347c5abb6464c2af9e73141aaf8c828))
+* **deps:** update dependency nock to v14.0.5 ([#190](https://github.com/higebu/vaddy-action/issues/190)) ([a45d3ee](https://github.com/higebu/vaddy-action/commit/a45d3ee48fafbf81e5c3188503e8aa21fd144d9e))
+* **deps:** update dependency node to v22 ([#180](https://github.com/higebu/vaddy-action/issues/180)) ([c9e3ce9](https://github.com/higebu/vaddy-action/commit/c9e3ce9ab6b77a25d0e58be63a51b7c623f607a3))
+
 ## [1.4.5](https://github.com/higebu/vaddy-action/compare/v1.4.4...v1.4.5) (2024-11-14)
 
 
