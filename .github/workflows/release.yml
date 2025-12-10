@@ -49,7 +49,7 @@ jobs:
         echo "${DIFF}" >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
     - name: Create PR with dist
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@v8
       with:
         token: ${{ secrets.ACTIONS_BOT_TOKEN }}
         commit-message: Build dist
